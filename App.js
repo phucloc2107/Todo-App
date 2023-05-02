@@ -1,11 +1,11 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList } from 'react-native';
+import { SafeAreaView, StyleSheet, View, Text, TextInput, TouchableOpacity, FlatList, Alert } from 'react-native';
 import ICON from 'react-native-vector-icons/MaterialIcons';
 
 const COLORS = { primary: '#1f145c', white: '#fff' };
 
 const App = () => {
-
+  const [textInput, setTextInput] = React.useState('');
   const [todos, setTodos] = React.useState([
     { id: 1, task: 'First to do', completed: true },
     { id: 2, task: 'Second to do', complete: false },
@@ -23,7 +23,7 @@ const App = () => {
         {/* button click action */}
         {
           !todo?.completed && (
-            <TouchableOpacity style={styles.actionIcon}>
+            <TouchableOpacity style={styles.actionIcon} onPress={() => markTodoComplete(todo?.id)}>
               <ICON name='done' size={20} color={COLORS.white} />
             </TouchableOpacity>
           )}
@@ -33,6 +33,32 @@ const App = () => {
         </TouchableOpacity>
       </View>
     );
+  };
+
+  // function add to do
+  const addTodo = () => {
+    if (textInput == '') {
+      Alert.alert('Error', 'Please input to do')
+    } else {
+      const newTodo = {
+        id: Math.random(),
+        task: textInput,
+        completed: false,
+      };
+      setTodos([...todos, newTodo]);
+      setTextInput('');
+    };
+  }
+
+  // function Mark to do completed
+  const markTodoComplete = todoId => {
+    const newTodos = todos.map(item => {
+      if (item.id == todoId) {
+        return { ...item, completed: true };
+      }
+      return item;
+    });
+    setTodos(newTodos);
   }
 
   return (
@@ -58,11 +84,15 @@ const App = () => {
       <View style={styles.footer}>
         {/* Text input  */}
         <View style={styles.inputContainer}>
-          <TextInput placeholder='Add to do' />
+          <TextInput
+            placeholder='Add to do'
+            value={textInput}
+            onChangeText={text => setTextInput(text)}
+          />
         </View>
 
         {/* button add to do */}
-        <TouchableOpacity>
+        <TouchableOpacity onPress={addTodo}>
           <View style={styles.iconContainer}>
             <ICON name='add' color={COLORS.white} size={30} />
           </View>
