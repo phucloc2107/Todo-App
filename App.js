@@ -28,7 +28,7 @@ const App = () => {
             </TouchableOpacity>
           )}
 
-        <TouchableOpacity style={[styles.actionIcon, { backgroundColor: 'red' }]}>
+        <TouchableOpacity style={[styles.actionIcon, { backgroundColor: 'red' }]} onPress={() => deleteTodo(todo?.id)}>
           <ICON name='delete' size={20} color={COLORS.white} />
         </TouchableOpacity>
       </View>
@@ -61,6 +61,25 @@ const App = () => {
     setTodos(newTodos);
   }
 
+  //function Delete to do
+  const deleteTodo = todoId => {
+    const newTodos = todos.filter(item => item.id != todoId);
+    setTodos(newTodos);
+  }
+
+  // function Clear all to do
+  const clearTodos = () => {
+    Alert.alert('Confirm', 'Clear to do ?', [
+      {
+        text: 'Yes',
+        onPress: () => setTodos([]),
+      },
+      {
+        text: 'No',
+      }
+    ]);
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.white }}>
       <View style={styles.header}>
@@ -69,7 +88,7 @@ const App = () => {
         </Text>
 
         {/* Icon header */}
-        <ICON name='delete' size={25} color='red' />
+        <ICON name='delete' size={25} color='red' onPress={clearTodos} />
       </View>
 
       {/* List must has to do */}
